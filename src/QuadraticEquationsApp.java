@@ -4,9 +4,12 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -14,7 +17,7 @@ import javafx.stage.Stage;
 
 public class QuadraticEquationsApp extends Application {
     TextField tfA, tfB, tfC;
-    Label lbX1, lbX2, lbD;
+    Label lbX1, lbX2, lbD, lbEquation;
     
     public void start(Stage stage) throws Exception{
         
@@ -25,7 +28,6 @@ public class QuadraticEquationsApp extends Application {
         
         //top panel------------------------------------------------
         Label lbHead = new Label("Quadratic Equations");
-        //lbHead.setMaxWidth(Double.MAX_VALUE);
         lbHead.setMinHeight(60);
         //css classes
         lbHead.getStyleClass().addAll("header", "pane");
@@ -39,7 +41,7 @@ public class QuadraticEquationsApp extends Application {
         tfA = new TextField("1");
         tfB = new TextField("6");
         tfC = new TextField("5");
-        Label lbEquation = new Label("ax\u00B2+bx+c=0");
+        lbEquation = new Label("ax\u00B2+bx+c=0");
         
         lbX1 = new Label("");
         lbX2 = new Label("");
@@ -76,24 +78,55 @@ public class QuadraticEquationsApp extends Application {
         launch(args);
     }
 
+    public void throwAlert(String header, String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.setGraphic(new ImageView(new Image("images/iconWarning01.png")));
+
+        Stage stage = (Stage)alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("images/iconWarning02.png"));
+        
+        stage.showAndWait();
+    }
+
     public class ClickCalculate implements EventHandler<ActionEvent>{
         private DecimalFormat df = new DecimalFormat("##.##");
-        
+        private double a, b, c;
+        private double vysledok[];
+
         public void handle(ActionEvent event){
-            double a = Double.parseDouble(tfA.getText());
-            double b = Double.parseDouble(tfB.getText());
-            double c = Double.parseDouble(tfC.getText());
+            try{ //tries to read values from textfields
+                a = Double.parseDouble(tfA.getText());
+                b = Double.parseDouble(tfB.getText());
+                c = Double.parseDouble(tfC.getText());
 
-            double vysledok[] = QuadraticEquation.qEquation(a, b, c);
+                if(a == 0.0 ){ //a can't be 0 in order to calculate
+                    throwAlert("Invalid input!", "A value can't be 0.");
+                    return;
+                }
+            }catch(Exception e){ //if one or more values aren't numbers
+                throwAlert("Invalid input!", "Enter numbers in all fields please.");
+                return;
+            }
 
-            if(vysledok.length == 2){ //ak je jeden koren
-                lbD.setText("" + df.format(vysledok[0]));
-                lbX1.setText("" + df.format(vysledok[1]));
-                lbX2.setText("");
-            }else if(vysledok.length == 3){
-                lbD.setText("" + df.format(vysledok[0]));
-                lbX1.setText("" + df.format(vysledok[1]));
-                lbX2.setText("" + df.format(vysledok[2]));
+            vysledok = QuadraticEquation.qEquation(a, b, c);
+            
+            if(vysledok == null){
+                throwAlert("Error!", "Discriminant is smaller than 0.\nRoots are complex.");
+                return;
+            }else{
+                if(vysledok.length == 2){ //if there's one root
+                    lbD.setText("" + df.format(vysledok[0]));
+                    lbX1.setText("" + df.format(vysledok[1]));
+                    lbX2.setText("");
+                }else if(vysledok.length == 3){ //if there's two roots
+                    lbD.setText("" + df.format(vysledok[0]));
+                    lbX1.setText("" + df.format(vysledok[1]));
+                    lbX2.setText("" + df.format(vysledok[2]));
+                }
+
+                lbEquation.setText(a + "x\u00B2+" + b + "x+" + c + "=0");
             }
         }
     }
