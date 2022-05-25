@@ -1,5 +1,7 @@
+import java.text.DecimalFormat;
+
 import javafx.application.Application;
-import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,8 +28,7 @@ public class KvadratickeRovniceApp extends Application {
         //lbHead.setMaxWidth(Double.MAX_VALUE);
         lbHead.setMinHeight(60);
         //css classes
-        lbHead.getStyleClass().add("header");
-        lbHead.getStyleClass().add("pane");
+        lbHead.getStyleClass().addAll("header", "pane");
         //apply
         bpMain.setTop(lbHead);
 
@@ -53,10 +54,10 @@ public class KvadratickeRovniceApp extends Application {
         gpLpFields.add(new Label("D:"), 0, 5); gpLpFields.add(lbD, 1, 5);
         
         VBox vbLeftPanel = new VBox(gpLpFields, lbRovnica, btVypocet);
+        //vbLeftPanel.setStyle("-fx-padding: 20;");
         
         //css classes
-        vbLeftPanel.getStyleClass().add("left-panel");
-        vbLeftPanel.getStyleClass().add("pane");
+        vbLeftPanel.getStyleClass().addAll("left-panel", "pane");
         
         //apply
         bpMain.setLeft(vbLeftPanel);
@@ -76,8 +77,10 @@ public class KvadratickeRovniceApp extends Application {
         launch(args);
     }
 
-    public class KlikVysledok implements EventHandler{
-        public void handle(Event event){
+    public class KlikVysledok implements EventHandler<ActionEvent>{
+        private DecimalFormat df = new DecimalFormat("##.##");
+        
+        public void handle(ActionEvent event){
             double a = Double.parseDouble(tfA.getText());
             double b = Double.parseDouble(tfB.getText());
             double c = Double.parseDouble(tfC.getText());
@@ -85,13 +88,13 @@ public class KvadratickeRovniceApp extends Application {
             double vysledok[] = KvadratickaRovnica.kvRovnica(a, b, c);
 
             if(vysledok.length == 2){ //ak je jeden koren
-                lbD.setText("" + vysledok[0]);
-                lbX1.setText("" + vysledok[1]);
+                lbD.setText("" + df.format(vysledok[0]));
+                lbX1.setText("" + df.format(vysledok[1]));
                 lbX2.setText("");
             }else if(vysledok.length == 3){
-                lbD.setText("" + vysledok[0]);
-                lbX1.setText("" + vysledok[1]);
-                lbX2.setText("" + vysledok[2]);
+                lbD.setText("" + df.format(vysledok[0]));
+                lbX1.setText("" + df.format(vysledok[1]));
+                lbX2.setText("" + df.format(vysledok[2]));
             }
         }
     }

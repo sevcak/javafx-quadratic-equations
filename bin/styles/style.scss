@@ -1,22 +1,39 @@
 .root{
     -fx-font-size: 16px;
+    font-size: 16px;
 }
 
 .pane{
     -fx-alignment: center;
+
     -fx-border-color: black;
-    -fx-border-style: solid;
     -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-padding: 20;
+    -fx-spacing: 8;
+
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    padding: 20px;
 }
 
 .header{
     -fx-max-width: infinity;
     -fx-text-alignment: center;
     -fx-alignment: center;
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+
+    max-width: 100%;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 .left-panel{
     -fx-min-width: 200px;
     -fx-vgap: 10px;
     -fx-alignment: center;
+
+    min-width: 200px;
 }
