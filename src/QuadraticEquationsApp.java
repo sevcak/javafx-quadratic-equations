@@ -12,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class KvadratickeRovniceApp extends Application {
+public class QuadraticEquationsApp extends Application {
     TextField tfA, tfB, tfC;
     Label lbX1, lbX2, lbD;
     
@@ -24,7 +24,7 @@ public class KvadratickeRovniceApp extends Application {
         bpMain.getStyleClass().add("bpMain");
         
         //top panel------------------------------------------------
-        Label lbHead = new Label("Kvadratické Rovnice");
+        Label lbHead = new Label("Quadratic Equations");
         //lbHead.setMaxWidth(Double.MAX_VALUE);
         lbHead.setMinHeight(60);
         //css classes
@@ -33,13 +33,13 @@ public class KvadratickeRovniceApp extends Application {
         bpMain.setTop(lbHead);
 
         //left panel-----------------------------------------------
-        Button btVypocet = new Button("Výsledok");
-        btVypocet.setOnAction(new KlikVysledok());
+        Button btCalculate = new Button("Calculate");
+        btCalculate.setOnAction(new ClickCalculate());
         
         tfA = new TextField("1");
         tfB = new TextField("6");
         tfC = new TextField("5");
-        Label lbRovnica = new Label("ax\u00B2+bx+c=0");
+        Label lbEquation = new Label("ax\u00B2+bx+c=0");
         
         lbX1 = new Label("");
         lbX2 = new Label("");
@@ -53,8 +53,7 @@ public class KvadratickeRovniceApp extends Application {
         gpLpFields.add(new Label("x\u2082:"), 0, 4); gpLpFields.add(lbX2, 1, 4);
         gpLpFields.add(new Label("D:"), 0, 5); gpLpFields.add(lbD, 1, 5);
         
-        VBox vbLeftPanel = new VBox(gpLpFields, lbRovnica, btVypocet);
-        //vbLeftPanel.setStyle("-fx-padding: 20;");
+        VBox vbLeftPanel = new VBox(gpLpFields, lbEquation, btCalculate);
         
         //css classes
         vbLeftPanel.getStyleClass().addAll("left-panel", "pane");
@@ -69,7 +68,7 @@ public class KvadratickeRovniceApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
 
         stage.setScene(scene);
-        stage.setTitle("Kvadratické Rovnice");
+        stage.setTitle("Quadratic Equations");
         stage.show();
     }
     
@@ -77,7 +76,7 @@ public class KvadratickeRovniceApp extends Application {
         launch(args);
     }
 
-    public class KlikVysledok implements EventHandler<ActionEvent>{
+    public class ClickCalculate implements EventHandler<ActionEvent>{
         private DecimalFormat df = new DecimalFormat("##.##");
         
         public void handle(ActionEvent event){
@@ -85,7 +84,7 @@ public class KvadratickeRovniceApp extends Application {
             double b = Double.parseDouble(tfB.getText());
             double c = Double.parseDouble(tfC.getText());
 
-            double vysledok[] = KvadratickaRovnica.kvRovnica(a, b, c);
+            double vysledok[] = QuadraticEquation.qEquation(a, b, c);
 
             if(vysledok.length == 2){ //ak je jeden koren
                 lbD.setText("" + df.format(vysledok[0]));

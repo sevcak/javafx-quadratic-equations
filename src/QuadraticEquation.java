@@ -1,5 +1,5 @@
-public class KvadratickaRovnica {
-   public static double[] kvRovnica(double a, double b, double c){
+public class QuadraticEquation {
+   public static double[] qEquation(double a, double b, double c){
       double d = (b * b) - (4 * a * c);
 
       if(d > 0.0){
