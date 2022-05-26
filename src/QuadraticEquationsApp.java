@@ -150,7 +150,7 @@ public class QuadraticEquationsApp extends Application {
         private NumberAxis axisX;
         private NumberAxis axisY;
 
-        //creates
+        //creates a coordinate grid with a specific, unchangeable size
         public CoordinateGridPane(int width, int height){
             setPrefSize(width, height);
             setMinSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
@@ -171,8 +171,8 @@ public class QuadraticEquationsApp extends Application {
             getChildren().setAll(axisX, axisY);
         }
 
+        //creates a coordinate grid that changes relatively to its size
         public CoordinateGridPane(){
-
             prefWidthProperty().bind(this.widthProperty());
             prefHeightProperty().bind(this.heightProperty());
             
