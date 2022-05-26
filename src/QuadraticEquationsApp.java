@@ -1,9 +1,12 @@
 import java.text.DecimalFormat;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -63,6 +67,16 @@ public class QuadraticEquationsApp extends Application {
         //apply
         bpMain.setLeft(vbLeftPanel);
 
+        //main panel----------------------------------------------------------
+        CoordinateGridPane graphGrid = new CoordinateGridPane();
+        
+        //css classes
+        graphGrid.getStyleClass().addAll("pane", "main-panel");
+        
+        //apply
+        bpMain.setCenter(graphGrid);
+        
+
         //scene setup----------------------------------------------
         Scene scene = new Scene(bpMain, 800, 400);
         
@@ -90,6 +104,7 @@ public class QuadraticEquationsApp extends Application {
         stage.showAndWait();
     }
 
+    //handles clicking on the "Calculate" button, counts equation and draws a graphGrid
     public class ClickCalculate implements EventHandler<ActionEvent>{
         private DecimalFormat df = new DecimalFormat("##.##");
         private double a, b, c;
@@ -128,6 +143,50 @@ public class QuadraticEquationsApp extends Application {
 
                 lbEquation.setText(a + "x\u00B2+" + b + "x+" + c + "=0");
             }
+        }
+    }
+
+    public class CoordinateGridPane extends Pane{
+        private NumberAxis axisX;
+        private NumberAxis axisY;
+
+        //creates
+        public CoordinateGridPane(int width, int height){
+            setPrefSize(width, height);
+            setMinSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
+            setMaxSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
+
+            axisX = new NumberAxis(-10, 10, 1);
+            axisX.setSide(Side.BOTTOM);
+            axisX.setPrefWidth(width);
+            axisX.setLayoutY(height / 2);
+            axisX.setMinorTickVisible(false);
+            
+            axisY = new NumberAxis(-10, 10, 1);
+            axisY.setSide(Side.LEFT);
+            axisY.setPrefHeight(height);
+            axisY.layoutXProperty().bind(Bindings.subtract((width / 2) + 1, axisY.widthProperty()));
+            axisY.setMinorTickVisible(false);
+
+            getChildren().setAll(axisX, axisY);
+        }
+
+        public CoordinateGridPane(){
+
+            prefWidthProperty().bind(this.widthProperty());
+            prefHeightProperty().bind(this.heightProperty());
+            
+            axisX = new NumberAxis(-10, 10, 1);
+            axisX.setSide(Side.BOTTOM);
+            axisX.prefWidthProperty().bind(this.widthProperty());
+            axisX.layoutYProperty().bind(Bindings.divide(this.heightProperty(), 2));
+            
+            axisY = new NumberAxis(-10, 10, 1);
+            axisY.setSide(Side.LEFT);
+            axisY.prefHeightProperty().bind(this.heightProperty());
+            axisY.layoutXProperty().bind(Bindings.subtract((Bindings.divide(this.widthProperty(), 2)), axisY.widthProperty()));
+
+            getChildren().setAll(axisX, axisY);
         }
     }
 }
