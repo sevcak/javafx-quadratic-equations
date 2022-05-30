@@ -276,7 +276,7 @@ public class QuadraticEquationsApp extends Application {
                 );
 
                 while(currentX <= endX){
-                    currentX += 0.2;
+                    currentX += 0.0005*facZoom;
                     
                     path.getElements().add(
                     new LineTo(findLocationX(currentX, gpaneAxes), findLocationY(QuadraticEquation.findY(a, b, c, currentX),gpaneAxes))
