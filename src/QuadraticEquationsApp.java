@@ -21,7 +21,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -258,8 +257,16 @@ public class QuadraticEquationsApp extends Application {
                 double b = Double.parseDouble(tfB.getText());
                 double c = Double.parseDouble(tfC.getText());
     
-                double startX = Math.min(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x2"));
-                double endX = Math.max(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x2"));;
+                double startX = 0, endX = 0; 
+                if(a > 0){
+                    startX = Math.min(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x2"));
+                    endX = Math.max(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x2"));;
+                }else if(a < 0){
+                    startX = Math.min(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x2"));
+                    endX = Math.max(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x2"));;
+                }
+
+                
                 double currentX = startX;
 
                 path.getElements().clear();
