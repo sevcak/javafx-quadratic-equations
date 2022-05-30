@@ -2,6 +2,8 @@ import java.text.DecimalFormat;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
@@ -13,15 +15,23 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class QuadraticEquationsApp extends Application {
     TextField tfA, tfB, tfC;
     Label lbX1, lbX2, lbD, lbEquation;
+    Graph graph;
     
     public void start(Stage stage) throws Exception{
         
@@ -68,23 +78,26 @@ public class QuadraticEquationsApp extends Application {
         bpMain.setLeft(vbLeftPanel);
 
         //main panel----------------------------------------------------------
-        CoordinateGridPane graphGrid = new CoordinateGridPane();
+        graph = new Graph();
         
         //css classes
-        graphGrid.getStyleClass().addAll("pane", "main-panel");
+        graph.getStyleClass().addAll("pane", "main-panel");
+        graph.pathGraph.getStyleClassPath("graph-line");        
         
         //apply
-        bpMain.setCenter(graphGrid);
-        
+        bpMain.setCenter(graph);
 
         //scene setup----------------------------------------------
         Scene scene = new Scene(bpMain, 800, 400);
+        
         
         //apply styles
         scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
 
         stage.setScene(scene);
         stage.setTitle("Quadratic Equations");
+        stage.setMinWidth(520);
+        stage.setMinHeight(420);
         stage.show();
     }
     
@@ -143,12 +156,14 @@ public class QuadraticEquationsApp extends Application {
 
                 lbEquation.setText(a + "x\u00B2+" + b + "x+" + c + "=0");
             }
+            
+            graph.pathGraph.drawGraph();
         }
     }
 
     public class CoordinateGridPane extends Pane{
-        private NumberAxis axisX;
-        private NumberAxis axisY;
+        NumberAxis axisX;
+        NumberAxis axisY;
 
         //creates a coordinate grid with a specific, unchangeable size
         public CoordinateGridPane(int width, int height){
@@ -171,22 +186,125 @@ public class QuadraticEquationsApp extends Application {
             getChildren().setAll(axisX, axisY);
         }
 
-        //creates a coordinate grid that changes relatively to its size
+        //creates a coordinate grid that changes relatively to size of its window
         public CoordinateGridPane(){
-            prefWidthProperty().bind(this.widthProperty());
-            prefHeightProperty().bind(this.heightProperty());
+            Rectangle paneClip = new Rectangle();
+            paneClip.widthProperty().bind(widthProperty());
+            paneClip.heightProperty().bind(heightProperty());
+            setClip(paneClip);
             
             axisX = new NumberAxis(-10, 10, 1);
             axisX.setSide(Side.BOTTOM);
-            axisX.prefWidthProperty().bind(this.widthProperty());
+            axisX.setPrefWidth(1920);
             axisX.layoutYProperty().bind(Bindings.divide(this.heightProperty(), 2));
-            
+            axisX.layoutXProperty().bind(Bindings.add(Bindings.subtract(0, Bindings.divide(axisX.prefWidthProperty(), 2)), Bindings.divide(widthProperty(), 2)));
+
             axisY = new NumberAxis(-10, 10, 1);
             axisY.setSide(Side.LEFT);
-            axisY.prefHeightProperty().bind(this.heightProperty());
+            axisY.setPrefHeight(1920);
             axisY.layoutXProperty().bind(Bindings.subtract((Bindings.divide(this.widthProperty(), 2)), axisY.widthProperty()));
+            axisY.layoutYProperty().bind(Bindings.add(Bindings.subtract(0, Bindings.divide(axisY.prefHeightProperty(), 2)), Bindings.divide(heightProperty(), 2)));
 
             getChildren().setAll(axisX, axisY);
+        }
+    }
+
+    public class Graph extends StackPane{
+        int facZoom;
+        CoordinateGridPane gpaneAxes;
+        GraphPath pathGraph;
+        
+        public Graph(){
+            facZoom = 100;
+            gpaneAxes = new CoordinateGridPane();
+            pathGraph = new GraphPath();
+
+            getChildren().addAll(gpaneAxes, pathGraph);
+
+            setOnScroll(new ScrollZoom());
+
+            widthProperty().addListener(new ResizeGraph());
+            heightProperty().addListener(new ResizeGraph());
+        }
+
+        public double findLocationX(double x, CoordinateGridPane axes){
+            return (x * axes.axisX.getPrefWidth() / axes.axisX.getUpperBound() / 2) + (getWidth() / 2);
+        }
+
+        public double findLocationY(double y, CoordinateGridPane axes){
+            return (-y * axes.axisY.getPrefHeight() / axes.axisY.getUpperBound() / 2) + (getHeight() / 2);
+        }
+
+        public class GraphPath extends Pane{
+            private Path path;
+            
+            public GraphPath(){
+                //clips off overflow
+                Rectangle paneClip = new Rectangle();
+                paneClip.widthProperty().bind(widthProperty());
+                paneClip.heightProperty().bind(heightProperty());
+                setClip(paneClip);
+
+                path = new Path();
+
+                //adds graph line to view
+                getChildren().add(path);
+                //path.getStyleClass().add("graph-line");
+            }
+            
+            //draws quadratic graph line
+            public void drawGraph(){
+                double a = Double.parseDouble(tfA.getText());
+                double b = Double.parseDouble(tfB.getText());
+                double c = Double.parseDouble(tfC.getText());
+    
+                double startX = Math.min(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x2"));
+                double endX = Math.max(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getUpperBound(), "x2"));;
+                double currentX = startX;
+
+                path.getElements().clear();
+
+                path.getElements().add(
+                    new MoveTo(findLocationX(startX, gpaneAxes), findLocationY(QuadraticEquation.findY(a, b, c, startX), gpaneAxes))
+                );
+
+                while(currentX <= endX){
+                    currentX += 0.2;
+                    
+                    path.getElements().add(
+                    new LineTo(findLocationX(currentX, gpaneAxes), findLocationY(QuadraticEquation.findY(a, b, c, currentX),gpaneAxes))
+                    );
+                }        
+            }
+        
+            public void getStyleClassPath(String arg){
+                path.getStyleClass().add(arg);
+            }
+        }
+
+        public class ScrollZoom implements EventHandler<ScrollEvent>{
+            public void handle(ScrollEvent event){
+                if(event.getDeltaY() > 0){
+                    facZoom -= 10;
+                }else if(event.getDeltaY() < 0){
+                    facZoom += 10;
+                }
+
+                gpaneAxes.axisX.setLowerBound(-0.1 * facZoom);
+                gpaneAxes.axisX.setUpperBound(0.1 * facZoom);
+
+                gpaneAxes.axisY.setLowerBound(-0.1 * facZoom);
+                gpaneAxes.axisY.setUpperBound(0.1 * facZoom);
+
+                graph.pathGraph.drawGraph();
+            }
+        }
+        
+        public class ResizeGraph implements ChangeListener<Number>{
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue){
+                //graph.pathGraph.getChildren().clear();
+                graph.pathGraph.drawGraph();
+            }
         }
     }
 }
