@@ -291,7 +291,7 @@ public class QuadraticEquationsApp extends Application {
 
         public class ScrollZoom implements EventHandler<ScrollEvent>{
             public void handle(ScrollEvent event){
-                if(event.getDeltaY() > 0){
+                if(event.getDeltaY() > 0 && facZoom > 100){
                     facZoom -= 10;
                 }else if(event.getDeltaY() < 0){
                     facZoom += 10;
