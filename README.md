@@ -1,5 +1,7 @@
 # Quadratic Equations
-A JavaFX application that calculates a quadratic equation and draws its graph
+A JavaFX application that calculates a quadratic equation and draws graphs it
 
-Autor: Lukáš Ševc
 
+Author: Lukáš Ševc
+
+GitHub repository: https://github.com/sevcak/javafx-quadratic-equations
