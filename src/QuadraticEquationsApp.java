@@ -131,6 +131,7 @@ public class QuadraticEquationsApp extends Application {
         stage.setTitle("Quadratic Equations");
         stage.setMinWidth(520);
         stage.setMinHeight(460);
+        stage.getIcons().add(new Image("./images/icon.png"));
         stage.show();
         
         graph.drawGrid();
