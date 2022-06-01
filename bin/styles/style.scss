@@ -66,6 +66,9 @@
     border-width: 1.5px;
     border-style: solid;
 
+    -fx-tick-label-fill: black;
+    -fx-tick-mark-visible: false;
+
     &.horizontal{
         -fx-border-color: black transparent transparent transparent;
         border-color: black;

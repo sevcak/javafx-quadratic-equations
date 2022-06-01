@@ -34,8 +34,6 @@ public class QuadraticEquationsApp extends Application {
     Graph graph;
     
     public void start(Stage stage) throws Exception{
-        
-
         //UI build
         BorderPane bpMain = new BorderPane();
         bpMain.getStyleClass().add("bpMain");
