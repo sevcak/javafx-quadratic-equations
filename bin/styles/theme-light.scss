@@ -1,0 +1,72 @@
+$color-main: black;
+
+.root{
+   -fx-text-fill: $color-main;
+   
+   color: $color-main;
+}
+
+.pane{
+    -fx-border-color: $color-main;
+
+    border-color: $color-main;
+}
+
+.header{
+
+    &>*{
+        -fx-stroke: $color-main;
+
+        stroke: $color-main;
+    }
+}
+
+.left-panel{
+    -fx-min-width: 200px;
+    -fx-vgap: 10px;
+    -fx-alignment: center;
+
+    min-width: 200px;
+}
+
+.main-panel{
+    -fx-max-width: infinity;
+    -fx-max-height: infinity;
+    -fx-align: center;
+    -fx-padding: 0;
+
+    max-width: 100%;
+    max-height: 100%;
+    padding: 0;
+}
+
+.graph-line{
+    -fx-stroke: blue;
+
+    stroke: $color-main;
+}
+
+.graph-axis{
+    -fx-tick-label-fill: $color-main;
+
+    &.horizontal{
+        -fx-border-color: $color-main transparent transparent transparent;
+        border-color: $color-main;
+    }
+
+    &.vertical{
+        -fx-border-color: transparent $color-main transparent transparent;
+        border-color: $color-main;
+    }
+}
+
+
+.graph-grid{
+    -fx-stroke: rgba($color-main, 0.2);
+    stroke: rgba($color-main, 0.2);
+
+    &>*{
+        -fx-stroke: rgba($color-main, 0.2);
+        stroke: rgba($color-main, 0.2);
+    }
+}

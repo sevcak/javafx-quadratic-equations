@@ -1,30 +1,16 @@
 .root {
-  -fx-font-size: 16px;
-  font-size: 16px;
+  -fx-text-fill: black;
+  color: black;
 }
 
 .pane {
-  -fx-alignment: center;
   -fx-border-color: black;
-  -fx-border-width: 1px;
-  -fx-border-style: solid;
-  -fx-padding: 20;
-  -fx-spacing: 8;
   border-color: black;
-  border-width: 1px;
-  border-style: solid;
-  padding: 20px;
 }
 
-.header {
-  -fx-max-width: infinity;
-  -fx-text-alignment: center;
-  -fx-alignment: center;
-  -fx-font-size: 1.5em;
-  -fx-font-weight: bold;
-  max-width: 100%;
-  font-size: 1.5em;
-  font-weight: bold;
+.header > * {
+  -fx-stroke: black;
+  stroke: black;
 }
 
 .left-panel {
@@ -45,21 +31,12 @@
 }
 
 .graph-line {
-  -fx-fill: none;
-  -fx-stroke-width: 2px;
-  -fx-stroke: red;
-  fill: none;
-  stroke-width: 2px;
+  -fx-stroke: blue;
   stroke: black;
 }
 
 .graph-axis {
-  -fx-border-width: 1.5px;
-  -fx-border-style: solid;
-  border-width: 1.5px;
-  border-style: solid;
   -fx-tick-label-fill: black;
-  -fx-tick-mark-visible: false;
 }
 
 .graph-axis.horizontal {
