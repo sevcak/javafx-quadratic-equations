@@ -25,13 +25,12 @@ $color-sec-darker-dark: #404040;
     .pane{
     -fx-alignment: center;
 
-    -fx-border-color: black;
+    
     -fx-border-width: 1px;
     -fx-border-style: solid;
-    -fx-padding: 20;
-    -fx-spacing: 8;
+    -fx-padding: 20px;
+    -fx-spacing: 8px;
 
-    border-color: black;
     border-width: 1px;
     border-style: solid;
     padding: 20px;
@@ -53,7 +52,7 @@ $color-sec-darker-dark: #404040;
 
     .left-panel{
         -fx-min-width: 200px;
-        -fx-vgap: 10px;
+        -fx-spacing: 10px;
         -fx-alignment: center;
 
         min-width: 200px;
@@ -77,7 +76,7 @@ $color-sec-darker-dark: #404040;
 
         fill: none;
         stroke-width: 2px;
-        stroke: black;
+        stroke: red;
     }
 
     .graph-axis{
@@ -103,12 +102,12 @@ $color-sec-darker-dark: #404040;
 
 
     .graph-grid{
-        -fx-stroke: rgba(black, 0.2);
-        stroke: rgba(black, 0.2);
+        -fx-stroke: $color-sec-darker-light;
+        stroke: $color-sec-darker-light;
 
         &>*{
-            -fx-stroke: rgba(black, 0.2);
-            stroke: rgba(black, 0.2);
+            -fx-stroke: $color-sec-darker-light;
+            stroke: $color-sec-darker-light;
         }
     }
 
@@ -120,6 +119,10 @@ $color-sec-darker-dark: #404040;
                 fill: lime;
             }
         }
+    }
+
+    .grid-pane-fields{
+        -fx-vgap: 6px;
     }
 
     //handles themes
@@ -264,7 +267,7 @@ $color-sec-darker-dark: #404040;
          }
          
          .graph-line{
-             -fx-stroke: blue;
+             -fx-stroke: red;
          
              stroke: $color-main-dark;
          }

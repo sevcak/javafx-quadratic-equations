@@ -69,6 +69,7 @@ public class QuadraticEquationsApp extends Application {
         gpLpFields.add(new Label("x\u2081:"), 0, 3); gpLpFields.add(lbX1, 1, 3);
         gpLpFields.add(new Label("x\u2082:"), 0, 4); gpLpFields.add(lbX2, 1, 4);
         gpLpFields.add(new Label("D:"), 0, 5); gpLpFields.add(lbD, 1, 5);
+        gpLpFields.getStyleClass().add("grid-pane-fields");
 
         //color theme switch
         ToggleSwitch toggleTheme = new ToggleSwitch(50);
@@ -104,7 +105,7 @@ public class QuadraticEquationsApp extends Application {
         VBox vbLeftPanel = new VBox(toggleContTheme, toggleContGrid, gpLpFields, lbEquation, btCalculate);
         
         //css classes
-        vbLeftPanel.getStyleClass().addAll("left-panel", "pane");
+        vbLeftPanel.getStyleClass().addAll("pane", "left-panel");
         
         //apply
         root.setLeft(vbLeftPanel);
@@ -119,7 +120,7 @@ public class QuadraticEquationsApp extends Application {
         root.setCenter(graph);
 
         //scene setup----------------------------------------------
-        Scene scene = new Scene(root, 800, 400);
+        Scene scene = new Scene(root, 860, 460);
         
         
         //apply styles
@@ -129,7 +130,7 @@ public class QuadraticEquationsApp extends Application {
         stage.setScene(scene);
         stage.setTitle("Quadratic Equations");
         stage.setMinWidth(520);
-        stage.setMinHeight(420);
+        stage.setMinHeight(460);
         stage.show();
         
         graph.drawGrid();
@@ -169,6 +170,9 @@ public class QuadraticEquationsApp extends Application {
                 c = Double.parseDouble(tfC.getText());
             }catch(Exception e){ //if one or more values aren't numbers
                 throwAlert("Invalid input!", "Enter numbers in all fields please.");
+                tfA.setText("0");
+                tfB.setText("0");
+                tfC.setText("0");
                 return;
             }
 
@@ -364,7 +368,7 @@ public class QuadraticEquationsApp extends Application {
                 );
 
                 while(currentX <= endX){
-                    currentX += 0.0005*facZoom;
+                    currentX += 0.0001*facZoom;
                     
                     path.getElements().add(
                     new LineTo(findLocationX(currentX, gpaneAxes), findLocationY(QuadraticEquation.findY(a, b, c, currentX),gpaneAxes))
