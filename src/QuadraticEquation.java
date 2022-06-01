@@ -1,6 +1,11 @@
 public class QuadraticEquation {
    //counts quadratic equaton and returns all roots and discriminant
    public static double[] qEquation(double a, double b, double c){
+      if(a == 0){
+         double[] ret = {LinearEquation.lEquation(b, c)};
+         return ret;
+      }
+      
       double d = (b * b) - (4 * a * c);
 
       if(d > 0.0){
@@ -52,4 +57,10 @@ public class QuadraticEquation {
    public static double findY(double a, double b, double c, double x){
       return (a * x * x) + (b * x) + c;
    }
+
+   public class LinearEquation{
+      public static double lEquation(double a, double b){
+          return -(a/b);
+      }
+  }
 }

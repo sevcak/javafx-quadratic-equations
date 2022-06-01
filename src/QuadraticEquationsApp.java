@@ -106,6 +106,7 @@ public class QuadraticEquationsApp extends Application {
         launch(args);
     }
 
+    //throws an alert with specified text
     public void throwAlert(String header, String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
@@ -129,11 +130,6 @@ public class QuadraticEquationsApp extends Application {
                 a = Double.parseDouble(tfA.getText());
                 b = Double.parseDouble(tfB.getText());
                 c = Double.parseDouble(tfC.getText());
-
-                if(a == 0.0 ){ //a can't be 0 in order to calculate
-                    throwAlert("Invalid input!", "A value can't be 0.");
-                    return;
-                }
             }catch(Exception e){ //if one or more values aren't numbers
                 throwAlert("Invalid input!", "Enter numbers in all fields please.");
                 return;
@@ -145,7 +141,11 @@ public class QuadraticEquationsApp extends Application {
                 throwAlert("Error!", "Discriminant is smaller than 0.\nRoots are complex.");
                 return;
             }else{
-                if(vysledok.length == 2){ //if there's one root
+                if(vysledok.length == 1){
+                    lbD.setText("");
+                    lbX1.setText(""+ df.format(vysledok[0]));
+                    lbX2.setText("");
+                }else if(vysledok.length == 2){ //if there's one root
                     lbD.setText("" + df.format(vysledok[0]));
                     lbX1.setText("" + df.format(vysledok[1]));
                     lbX2.setText("");
@@ -158,6 +158,7 @@ public class QuadraticEquationsApp extends Application {
                 lbEquation.setText(a + "x\u00B2+" + b + "x+" + c + "=0");
             }
             
+            //redraws graph
             graph.pathGraph.drawGraph();
         }
     }
@@ -281,7 +282,6 @@ public class QuadraticEquationsApp extends Application {
             private Path path;
             
             public GraphPath(){
-                
                 path = new Path();
 
                 //adds graph line to view
@@ -304,9 +304,11 @@ public class QuadraticEquationsApp extends Application {
                 }else if(a < 0){
                     startX = Math.min(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x2"));
                     endX = Math.max(QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x1"), QuadraticEquation.qEquation(a, b, c - gpaneAxes.axisY.getLowerBound(), "x2"));;
+                }else if(a == 0){
+                    startX = 0 - (getWidth() / 2);
+                    endX = getWidth();
                 }
 
-                
                 double currentX = startX;
 
                 path.getElements().clear();
