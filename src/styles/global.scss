@@ -47,6 +47,10 @@ $color-sec-darker-dark: #404040;
         font-size: 1.5em;
     }
 
+    .toggle-container{
+        -fx-spacing: 10px;
+    }
+
     .left-panel{
         -fx-min-width: 200px;
         -fx-vgap: 10px;

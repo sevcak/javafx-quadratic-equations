@@ -4,11 +4,16 @@ import javafx.scene.Parent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+//A switch toggle inspired by the iOS design
 public class ToggleSwitch extends Parent{
     private BooleanProperty switchedOn = new SimpleBooleanProperty(false);
 
     public BooleanProperty switchedOnProperty(){
         return switchedOn;
+    }
+
+    public void setSwitchedOn(boolean value){
+        switchedOn.set(value);
     }
 
     public ToggleSwitch(double width){

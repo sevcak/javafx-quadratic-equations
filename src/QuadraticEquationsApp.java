@@ -70,8 +70,9 @@ public class QuadraticEquationsApp extends Application {
         gpLpFields.add(new Label("x\u2082:"), 0, 4); gpLpFields.add(lbX2, 1, 4);
         gpLpFields.add(new Label("D:"), 0, 5); gpLpFields.add(lbD, 1, 5);
 
-        ToggleSwitch toggle = new ToggleSwitch(50);
-        toggle.switchedOnProperty().addListener((observable, oldValue, newValue) -> {
+        //color theme switch
+        ToggleSwitch toggleTheme = new ToggleSwitch(50);
+        toggleTheme.switchedOnProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
                 root.getStyleClass().remove("light-theme");
                 root.getStyleClass().add("dark-theme");
@@ -80,10 +81,27 @@ public class QuadraticEquationsApp extends Application {
                 root.getStyleClass().add("light-theme");
             }
         });
+        HBox toggleContTheme = new HBox(toggleTheme, new Label("Dark Mode"));
+        toggleContTheme.getStyleClass().add("toggle-container");
 
-        HBox toggleContainer = new HBox(new Label("Dark Mode"), toggle);
+        //grid visibility switch
+        ToggleSwitch toggleGrid = new ToggleSwitch(50);
+        toggleGrid.setSwitchedOn(true);
+        toggleGrid.switchedOnProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                graph.gpaneAxes.grid.setHidden(false);
+                graph.drawGrid();
+            }else{
+                graph.gpaneAxes.grid.setHidden(true);
+                graph.drawGrid();
+            }
+        });
+        HBox toggleContGrid = new HBox(toggleGrid, new Label("Grid"));
+        toggleContGrid.getStyleClass().add("toggle-container");
+
         
-        VBox vbLeftPanel = new VBox(toggleContainer, gpLpFields, lbEquation, btCalculate);
+        
+        VBox vbLeftPanel = new VBox(toggleContTheme, toggleContGrid, gpLpFields, lbEquation, btCalculate);
         
         //css classes
         vbLeftPanel.getStyleClass().addAll("left-panel", "pane");
@@ -227,16 +245,18 @@ public class QuadraticEquationsApp extends Application {
 
         public class CoordinateGrid extends Pane{
             private long steps;
+            private boolean hidden;
             
             public CoordinateGrid(){
                 getStyleClass().add("graph-grid");
+                hidden = false;
             }
 
             public void drawGrid(){
                 getChildren().clear();
 
+               if(!hidden){
                 double start;
-
                 steps = 2 * (int)(axisX.getUpperBound());
 
                 for(int i = 1; i < steps; i++){
@@ -254,6 +274,11 @@ public class QuadraticEquationsApp extends Application {
                     start = findLocationY(0) - (i * axisY.getHeight() / steps);
                     getChildren().add(new Line(0, start, axisX.getWidth(), start));
                 }
+               }
+            }
+
+            public void setHidden(boolean value){
+                hidden = value;
             }
         }
 
