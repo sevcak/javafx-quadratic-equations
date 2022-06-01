@@ -1,5 +1,12 @@
+@font-face {
+  font-family: 'Varela Round';
+  src: url("../fonts/VarelaRound/VarelaRound-Regular.ttf");
+}
+
 .root {
+  -fx-font-family: 'Varela Round', sans-serif;
   -fx-font-size: 16px;
+  font-family: 'Varela Round', sans-serif;
   font-size: 16px;
 }
 
@@ -21,10 +28,15 @@
   -fx-text-alignment: center;
   -fx-alignment: center;
   -fx-font-size: 1.5em;
-  -fx-font-weight: bold;
   max-width: 100%;
   font-size: 1.5em;
-  font-weight: bold;
+}
+
+.header > * {
+  -fx-stroke: black;
+  -fx-stroke-width: .5px;
+  stroke: black;
+  stroke-width: .5px;
 }
 
 .left-panel {

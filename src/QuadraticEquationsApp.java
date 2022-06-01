@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -33,10 +34,12 @@ public class QuadraticEquationsApp extends Application {
     Label lbX1, lbX2, lbD, lbEquation;
     Graph graph;
     
+    //sets up the GUI and prepares the application for use
     public void start(Stage stage) throws Exception{
         //UI build
-        BorderPane bpMain = new BorderPane();
-        bpMain.getStyleClass().add("bpMain");
+        BorderPane root = new BorderPane();
+        root.getStyleClass().add("root");
+        root.getStyleClass().add("light-theme");
         
         //top panel------------------------------------------------
         Label lbHead = new Label("Quadratic Equations");
@@ -44,7 +47,7 @@ public class QuadraticEquationsApp extends Application {
         //css classes
         lbHead.getStyleClass().addAll("header", "pane");
         //apply
-        bpMain.setTop(lbHead);
+        root.setTop(lbHead);
 
         //left panel-----------------------------------------------
         Button btCalculate = new Button("Calculate");
@@ -66,14 +69,46 @@ public class QuadraticEquationsApp extends Application {
         gpLpFields.add(new Label("x\u2081:"), 0, 3); gpLpFields.add(lbX1, 1, 3);
         gpLpFields.add(new Label("x\u2082:"), 0, 4); gpLpFields.add(lbX2, 1, 4);
         gpLpFields.add(new Label("D:"), 0, 5); gpLpFields.add(lbD, 1, 5);
+        gpLpFields.getStyleClass().add("grid-pane-fields");
+
+        //color theme switch
+        ToggleSwitch toggleTheme = new ToggleSwitch(50);
+        toggleTheme.switchedOnProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                root.getStyleClass().remove("light-theme");
+                root.getStyleClass().add("dark-theme");
+            }else{
+                root.getStyleClass().remove("dark-theme");
+                root.getStyleClass().add("light-theme");
+            }
+        });
+        HBox toggleContTheme = new HBox(toggleTheme, new Label("Dark Mode"));
+        toggleContTheme.getStyleClass().add("toggle-container");
+
+        //grid visibility switch
+        ToggleSwitch toggleGrid = new ToggleSwitch(50);
+        toggleGrid.setSwitchedOn(true);
+        toggleGrid.switchedOnProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                graph.gpaneAxes.grid.setHidden(false);
+                graph.drawGrid();
+            }else{
+                graph.gpaneAxes.grid.setHidden(true);
+                graph.drawGrid();
+            }
+        });
+        HBox toggleContGrid = new HBox(toggleGrid, new Label("Grid"));
+        toggleContGrid.getStyleClass().add("toggle-container");
+
         
-        VBox vbLeftPanel = new VBox(gpLpFields, lbEquation, btCalculate);
+        
+        VBox vbLeftPanel = new VBox(toggleContTheme, toggleContGrid, gpLpFields, lbEquation, btCalculate);
         
         //css classes
-        vbLeftPanel.getStyleClass().addAll("left-panel", "pane");
+        vbLeftPanel.getStyleClass().addAll("pane", "left-panel");
         
         //apply
-        bpMain.setLeft(vbLeftPanel);
+        root.setLeft(vbLeftPanel);
 
         //main panel----------------------------------------------------------
         graph = new Graph();
@@ -82,24 +117,26 @@ public class QuadraticEquationsApp extends Application {
         graph.getStyleClass().addAll("pane", "main-panel");
         
         //apply
-        bpMain.setCenter(graph);
+        root.setCenter(graph);
 
         //scene setup----------------------------------------------
-        Scene scene = new Scene(bpMain, 800, 400);
+        Scene scene = new Scene(root, 860, 460);
         
         
         //apply styles
-        scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/styles/global.css").toExternalForm());
+        
 
         stage.setScene(scene);
         stage.setTitle("Quadratic Equations");
         stage.setMinWidth(520);
-        stage.setMinHeight(420);
+        stage.setMinHeight(460);
         stage.show();
         
         graph.drawGrid();
     }
     
+    //starts the application
     public static void main(String[] args) {
         launch(args);
     }
@@ -107,6 +144,9 @@ public class QuadraticEquationsApp extends Application {
     //throws an alert with specified text
     public void throwAlert(String header, String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.getDialogPane().getStyleClass().add("alert");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/styles/global.css").toExternalForm());
+
         alert.setHeaderText(header);
         alert.setContentText(message);
         alert.setGraphic(new ImageView(new Image("images/iconWarning01.png")));
@@ -130,6 +170,9 @@ public class QuadraticEquationsApp extends Application {
                 c = Double.parseDouble(tfC.getText());
             }catch(Exception e){ //if one or more values aren't numbers
                 throwAlert("Invalid input!", "Enter numbers in all fields please.");
+                tfA.setText("0");
+                tfB.setText("0");
+                tfC.setText("0");
                 return;
             }
 
@@ -161,6 +204,7 @@ public class QuadraticEquationsApp extends Application {
         }
     }
 
+    //Coordinate grid with scalable axes
     public class CoordinateGridPane extends Pane{
         NumberAxis axisX;
         NumberAxis axisY;
@@ -205,16 +249,18 @@ public class QuadraticEquationsApp extends Application {
 
         public class CoordinateGrid extends Pane{
             private long steps;
+            private boolean hidden;
             
             public CoordinateGrid(){
                 getStyleClass().add("graph-grid");
+                hidden = false;
             }
 
             public void drawGrid(){
                 getChildren().clear();
 
+               if(!hidden){
                 double start;
-
                 steps = 2 * (int)(axisX.getUpperBound());
 
                 for(int i = 1; i < steps; i++){
@@ -232,6 +278,11 @@ public class QuadraticEquationsApp extends Application {
                     start = findLocationY(0) - (i * axisY.getHeight() / steps);
                     getChildren().add(new Line(0, start, axisX.getWidth(), start));
                 }
+               }
+            }
+
+            public void setHidden(boolean value){
+                hidden = value;
             }
         }
 
@@ -240,6 +291,7 @@ public class QuadraticEquationsApp extends Application {
         }
     }
 
+    //Quadratic graph drawn using the quadratic formula
     public class Graph extends StackPane{
         int facZoom;
         CoordinateGridPane gpaneAxes;
@@ -316,7 +368,7 @@ public class QuadraticEquationsApp extends Application {
                 );
 
                 while(currentX <= endX){
-                    currentX += 0.0005*facZoom;
+                    currentX += 0.0001*facZoom;
                     
                     path.getElements().add(
                     new LineTo(findLocationX(currentX, gpaneAxes), findLocationY(QuadraticEquation.findY(a, b, c, currentX),gpaneAxes))
@@ -350,5 +402,6 @@ public class QuadraticEquationsApp extends Application {
                 graph.drawGrid();
             }
         }
+
     }
 }

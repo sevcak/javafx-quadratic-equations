@@ -1,0 +1,324 @@
+@font-face {
+    font-family: 'Varela Round';
+    src: url('../fonts/VarelaRound/VarelaRound-Regular.ttf');
+}
+
+//color defs-------------------------
+//light theme
+$color-main-light: #191919;
+$color-secondary-light: #f2f2f2;
+$color-sec-darker-light: #bfbfbf;
+//dark theme
+$color-main-dark: #f2f2f2;
+$color-secondary-dark: #191919;
+$color-sec-darker-dark: #404040;
+//-----------------------------------
+
+
+.root{
+    -fx-font-family: 'Varela Round', sans-serif;
+    -fx-font-size: 16px;
+    
+    font-family: 'Varela Round', sans-serif;
+    font-size: 16px;
+
+    .pane{
+    -fx-alignment: center;
+
+    
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-padding: 20px;
+    -fx-spacing: 8px;
+
+    border-width: 1px;
+    border-style: solid;
+    padding: 20px;
+    }
+
+    .header{
+        -fx-max-width: infinity;
+        -fx-text-alignment: center;
+        -fx-alignment: center;
+        -fx-font-size: 1.5em;
+
+        max-width: 100%;
+        font-size: 1.5em;
+    }
+
+    .toggle-container{
+        -fx-spacing: 10px;
+    }
+
+    .left-panel{
+        -fx-min-width: 200px;
+        -fx-spacing: 10px;
+        -fx-alignment: center;
+
+        min-width: 200px;
+    }
+
+    .main-panel{
+        -fx-max-width: infinity;
+        -fx-max-height: infinity;
+        -fx-align: center;
+        -fx-padding: 0;
+
+        max-width: 100%;
+        max-height: 100%;
+        padding: 0;
+    }
+
+    .graph-line{
+        -fx-fill: none;
+        -fx-stroke-width: 2px;
+        -fx-stroke: red;
+
+        fill: none;
+        stroke-width: 2px;
+        stroke: red;
+    }
+
+    .graph-axis{
+        -fx-border-width: 1.5px;
+        -fx-border-style: solid;
+
+        border-width: 1.5px;
+        border-style: solid;
+
+        -fx-tick-label-fill: black;
+        -fx-tick-mark-visible: false;
+
+        &.horizontal{
+            -fx-border-color: black transparent transparent transparent;
+            border-color: black;
+        }
+
+        &.vertical{
+            -fx-border-color: transparent black transparent transparent;
+            border-color: black;
+        }
+    }
+
+
+    .graph-grid{
+        -fx-stroke: $color-sec-darker-light;
+        stroke: $color-sec-darker-light;
+
+        &>*{
+            -fx-stroke: $color-sec-darker-light;
+            stroke: $color-sec-darker-light;
+        }
+    }
+
+    .toggle-switch{
+        .background{
+            &.on{
+                -fx-fill: lime;
+                
+                fill: lime;
+            }
+        }
+    }
+
+    .grid-pane-fields{
+        -fx-vgap: 6px;
+    }
+
+    //handles themes
+
+    &.light-theme{
+        -fx-text-fill: $color-main-light;
+        -fx-background: $color-secondary-light;
+
+        color: $color-main-light;
+        background: $color-secondary-light;
+         
+        .pane{
+            -fx-border-color: $color-main-light;
+         
+            border-color: $color-main-light;
+
+            -fx-backround-color: $color-secondary-light;
+        }
+         
+        .header{
+             &>*{
+                -fx-stroke: $color-main-light;
+         
+                stroke: $color-main-light;
+            }
+        }
+         
+         .left-panel{
+             -fx-min-width: 200px;
+             -fx-vgap: 10px;
+             -fx-alignment: center;
+         
+             min-width: 200px;
+         }
+         
+         .main-panel{
+             -fx-max-width: infinity;
+             -fx-max-height: infinity;
+             -fx-align: center;
+             -fx-padding: 0;
+         
+             max-width: 100%;
+             max-height: 100%;
+             padding: 0;
+         }
+         
+         .graph-line{
+             -fx-stroke: red;
+         
+             stroke: $color-main-light;
+         }
+         
+         .graph-axis{
+             -fx-tick-label-fill: $color-main-light;
+         
+             &.horizontal{
+                 -fx-border-color: $color-main-light transparent transparent transparent;
+                 border-color: $color-main-light;
+             }
+         
+             &.vertical{
+                 -fx-border-color: transparent $color-main-light transparent transparent;
+                 border-color: $color-main-light;
+             }
+         }
+         
+         
+         .graph-grid{
+             -fx-stroke: rgba($color-main-light, 0.2);
+             stroke: rgba($color-main-light, 0.2);
+         
+             &>*{
+                 -fx-stroke: rgba($color-main-light, 0.2);
+                 stroke: rgba($color-main-light, 0.2);
+             }
+         }
+
+         .toggle-switch{
+            .background{
+                -fx-fill: $color-sec-darker-light;
+                -fx-stroke: $color-sec-darker-light;
+    
+                fill: $color-secondary-light;
+                stroke: $color-sec-darker-light;
+
+                &.on{
+                    -fx-fill: lime;
+                    
+                    fill: lime;
+                }
+            }
+    
+            .trigger{
+                -fx-fill: $color-secondary-light;
+                -fx-stroke: $color-sec-darker-light;
+    
+                fill: $color-secondary-light;
+                stroke: $color-sec-darker-light;
+            }
+        }
+    }
+
+    &.dark-theme{
+        -fx-text-fill: $color-main-dark;
+        -fx-background: $color-secondary-dark;
+        
+        color: $color-main-dark;
+        background: $color-secondary-dark;
+        
+         
+        .pane{
+             -fx-border-color: $color-main-dark;
+         
+             border-color: $color-main-dark;
+         }
+         
+        .header{
+            &>*{
+                -fx-stroke: $color-main-dark;
+         
+                stroke: $color-main-dark;
+            }
+        }
+         
+         .left-panel{
+             -fx-min-width: 200px;
+             -fx-vgap: 10px;
+             -fx-alignment: center;
+         
+             min-width: 200px;
+         }
+         
+         .main-panel{
+             -fx-max-width: infinity;
+             -fx-max-height: infinity;
+             -fx-align: center;
+             -fx-padding: 0;
+         
+             max-width: 100%;
+             max-height: 100%;
+             padding: 0;
+         }
+         
+         .graph-line{
+             -fx-stroke: red;
+         
+             stroke: $color-main-dark;
+         }
+         
+         .graph-axis{
+             -fx-tick-label-fill: $color-main-dark;
+         
+             &.horizontal{
+                 -fx-border-color: $color-main-dark transparent transparent transparent;
+                 border-color: $color-main-dark;
+             }
+         
+             &.vertical{
+                 -fx-border-color: transparent $color-main-dark transparent transparent;
+                 border-color: $color-main-dark;
+             }
+         }
+         
+         
+         .graph-grid{
+             -fx-stroke: rgba($color-main-dark, 0.2);
+             stroke: rgba($color-main-dark, 0.2);
+         
+             &>*{
+                 -fx-stroke: rgba($color-main-dark, 0.2);
+                 stroke: rgba($color-main-dark, 0.2);
+             }
+         }
+
+         .toggle-switch{
+            .background{
+                -fx-fill: $color-secondary-dark;
+                -fx-stroke: $color-sec-darker-dark;
+    
+                fill: $color-secondary-dark;
+                stroke: $color-sec-darker-dark;
+
+                &.on{
+                    -fx-fill: lime;
+                    
+                    fill: lime;
+                }
+            }
+    
+            .trigger{
+                -fx-fill: $color-secondary-dark;
+                -fx-stroke: $color-sec-darker-dark;
+    
+                fill: $color-secondary-dark;
+                stroke: $color-sec-darker-dark;
+            }
+        }
+    }
+}
