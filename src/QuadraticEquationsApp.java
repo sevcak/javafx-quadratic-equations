@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -81,7 +82,6 @@ public class QuadraticEquationsApp extends Application {
         
         //css classes
         graph.getStyleClass().addAll("pane", "main-panel");
-        graph.pathGraph.getStyleClassPath("graph-line");        
         
         //apply
         bpMain.setCenter(graph);
@@ -98,6 +98,8 @@ public class QuadraticEquationsApp extends Application {
         stage.setMinWidth(520);
         stage.setMinHeight(420);
         stage.show();
+        
+        graph.drawGrid();
     }
     
     public static void main(String[] args) {
@@ -163,27 +165,7 @@ public class QuadraticEquationsApp extends Application {
     public class CoordinateGridPane extends Pane{
         NumberAxis axisX;
         NumberAxis axisY;
-
-        //creates a coordinate grid with a specific, unchangeable size
-        public CoordinateGridPane(int width, int height){
-            setPrefSize(width, height);
-            setMinSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
-            setMaxSize(Pane.USE_PREF_SIZE, Pane.USE_PREF_SIZE);
-
-            axisX = new NumberAxis(-10, 10, 1);
-            axisX.setSide(Side.BOTTOM);
-            axisX.setPrefWidth(width);
-            axisX.setLayoutY(height / 2);
-            axisX.setMinorTickVisible(false);
-            
-            axisY = new NumberAxis(-10, 10, 1);
-            axisY.setSide(Side.LEFT);
-            axisY.setPrefHeight(height);
-            axisY.layoutXProperty().bind(Bindings.subtract((width / 2) + 1, axisY.widthProperty()));
-            axisY.setMinorTickVisible(false);
-
-            getChildren().setAll(axisX, axisY);
-        }
+        CoordinateGrid grid;
 
         //creates a coordinate grid that changes relatively to size of its window
         public CoordinateGridPane(){
@@ -197,14 +179,65 @@ public class QuadraticEquationsApp extends Application {
             axisX.setPrefWidth(1920);
             axisX.layoutYProperty().bind(Bindings.divide(this.heightProperty(), 2));
             axisX.layoutXProperty().bind(Bindings.add(Bindings.subtract(0, Bindings.divide(axisX.prefWidthProperty(), 2)), Bindings.divide(widthProperty(), 2)));
+            axisX.setMinorTickVisible(false);
+            axisX.getStyleClass().addAll("graph-axis", "horizontal");
 
             axisY = new NumberAxis(-10, 10, 1);
             axisY.setSide(Side.LEFT);
             axisY.setPrefHeight(1920);
             axisY.layoutXProperty().bind(Bindings.subtract((Bindings.divide(this.widthProperty(), 2)), axisY.widthProperty()));
             axisY.layoutYProperty().bind(Bindings.add(Bindings.subtract(0, Bindings.divide(axisY.prefHeightProperty(), 2)), Bindings.divide(heightProperty(), 2)));
+            axisY.setMinorTickVisible(false);
+            axisY.getStyleClass().addAll("graph-axis", "vertical");
 
-            getChildren().setAll(axisX, axisY);
+            grid = new CoordinateGrid();
+
+            getChildren().setAll(grid, axisX, axisY);
+        }
+
+        public double findLocationX(double x){
+            return (x * axisX.getPrefWidth() / axisX.getUpperBound() / 2) + (getWidth() / 2);
+        }
+
+        public double findLocationY(double y){
+            return (-y * axisY.getPrefHeight() / axisY.getUpperBound() / 2) + (getHeight() / 2);
+        }
+
+
+        public class CoordinateGrid extends Pane{
+            private long steps;
+            
+            public CoordinateGrid(){
+                getStyleClass().add("graph-grid");
+            }
+
+            public void drawGrid(){
+                getChildren().clear();
+
+                double start;
+
+                steps = 2 * (int)(axisX.getUpperBound());
+
+                for(int i = 1; i < steps; i++){
+                    //left side, vertical lines
+                    start = findLocationX(0) + (i * axisX.getWidth() / steps);
+                    getChildren().add(new Line(start, 0, start, axisY.getHeight()));
+                    //right side, vertical lines
+                    start = findLocationX(0) - (i * axisX.getWidth() / steps);
+                    getChildren().add(new Line(start, 0, start, axisY.getHeight()));
+
+                    //left side, vertical lines
+                    start = findLocationY(0) + (i * axisY.getHeight() / steps);
+                    getChildren().add(new Line(0, start, axisX.getWidth(), start));
+                    //right side, vertical lines
+                    start = findLocationY(0) - (i * axisY.getHeight() / steps);
+                    getChildren().add(new Line(0, start, axisX.getWidth(), start));
+                }
+            }
+        }
+
+        public void drawGrid(){
+            grid.drawGrid();
         }
     }
 
@@ -214,6 +247,12 @@ public class QuadraticEquationsApp extends Application {
         GraphPath pathGraph;
         
         public Graph(){
+            //clips off overflow
+            Rectangle paneClip = new Rectangle();
+            paneClip.widthProperty().bind(widthProperty());
+            paneClip.heightProperty().bind(heightProperty());
+            setClip(paneClip);
+
             facZoom = 100;
             gpaneAxes = new CoordinateGridPane();
             pathGraph = new GraphPath();
@@ -234,21 +273,22 @@ public class QuadraticEquationsApp extends Application {
             return (-y * axes.axisY.getPrefHeight() / axes.axisY.getUpperBound() / 2) + (getHeight() / 2);
         }
 
+        public void drawGrid(){
+            gpaneAxes.drawGrid();
+        }
+
         public class GraphPath extends Pane{
             private Path path;
             
             public GraphPath(){
-                //clips off overflow
-                Rectangle paneClip = new Rectangle();
-                paneClip.widthProperty().bind(widthProperty());
-                paneClip.heightProperty().bind(heightProperty());
-                setClip(paneClip);
-
+                
                 path = new Path();
 
                 //adds graph line to view
                 getChildren().add(path);
-                //path.getStyleClass().add("graph-line");
+
+                //adds css class
+                path.getStyleClass().add("graph-line");
             }
             
             //draws quadratic graph line
@@ -283,10 +323,6 @@ public class QuadraticEquationsApp extends Application {
                     );
                 }        
             }
-        
-            public void getStyleClassPath(String arg){
-                path.getStyleClass().add(arg);
-            }
         }
 
         public class ScrollZoom implements EventHandler<ScrollEvent>{
@@ -304,13 +340,14 @@ public class QuadraticEquationsApp extends Application {
                 gpaneAxes.axisY.setUpperBound(0.1 * facZoom);
 
                 graph.pathGraph.drawGraph();
+                graph.drawGrid();
             }
         }
         
         public class ResizeGraph implements ChangeListener<Number>{
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue){
-                //graph.pathGraph.getChildren().clear();
                 graph.pathGraph.drawGraph();
+                graph.drawGrid();
             }
         }
     }

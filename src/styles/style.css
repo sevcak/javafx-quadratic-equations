@@ -52,3 +52,30 @@
   stroke-width: 2px;
   stroke: black;
 }
+
+.graph-axis {
+  -fx-border-width: 1.5px;
+  -fx-border-style: solid;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+.graph-axis.horizontal {
+  -fx-border-color: black transparent transparent transparent;
+  border-color: black;
+}
+
+.graph-axis.vertical {
+  -fx-border-color: transparent black transparent transparent;
+  border-color: black;
+}
+
+.graph-grid {
+  -fx-stroke: rgba(0, 0, 0, 0.2);
+  stroke: rgba(0, 0, 0, 0.2);
+}
+
+.graph-grid > * {
+  -fx-stroke: rgba(0, 0, 0, 0.2);
+  stroke: rgba(0, 0, 0, 0.2);
+}
