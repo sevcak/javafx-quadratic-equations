@@ -33,3 +33,51 @@
   -fx-alignment: center;
   min-width: 200px;
 }
+
+.main-panel {
+  -fx-max-width: infinity;
+  -fx-max-height: infinity;
+  -fx-align: center;
+  -fx-padding: 0;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0;
+}
+
+.graph-line {
+  -fx-fill: none;
+  -fx-stroke-width: 2px;
+  -fx-stroke: red;
+  fill: none;
+  stroke-width: 2px;
+  stroke: black;
+}
+
+.graph-axis {
+  -fx-border-width: 1.5px;
+  -fx-border-style: solid;
+  border-width: 1.5px;
+  border-style: solid;
+  -fx-tick-label-fill: black;
+  -fx-tick-mark-visible: false;
+}
+
+.graph-axis.horizontal {
+  -fx-border-color: black transparent transparent transparent;
+  border-color: black;
+}
+
+.graph-axis.vertical {
+  -fx-border-color: transparent black transparent transparent;
+  border-color: black;
+}
+
+.graph-grid {
+  -fx-stroke: rgba(0, 0, 0, 0.2);
+  stroke: rgba(0, 0, 0, 0.2);
+}
+
+.graph-grid > * {
+  -fx-stroke: rgba(0, 0, 0, 0.2);
+  stroke: rgba(0, 0, 0, 0.2);
+}
